@@ -28,7 +28,6 @@ export const RoundsList: React.FC = () => {
   const [cursors, setCursors] = useState<Array<string | null>>([null]);
   const [creatingRound, setCreatingRound] = useState(false);
 
-  // Загрузка данных для текущей страницы
   const loadPageData = async (cursor: string | null) => {
     try {
       setLoading(true);
@@ -56,23 +55,19 @@ export const RoundsList: React.FC = () => {
     }
   };
 
-  // Загрузка начальной страницы
   useEffect(() => {
     if (user) {
       loadPageData(null);
     }
   }, [user]);
 
-  // Обработчик смены страницы
   const handlePageClick = (data: { selected: number }) => {
     const newPage = data.selected;
     setCurrentPage(newPage);
 
-    // Если у нас уже есть курсор для этой страницы, используем его
     if (cursors[newPage] !== undefined) {
       loadPageData(cursors[newPage]);
     } else {
-      // Если нет, используем курсор предыдущей страницы
       const cursor = pagination.nextCursor;
       setCursors((prev) => [...prev, cursor]);
       loadPageData(cursor);
@@ -86,10 +81,8 @@ export const RoundsList: React.FC = () => {
       setCreatingRound(true);
       const newRound = await roundsAPI.create();
 
-      // Добавляем новый раунд в начало списка
       setRounds((prev) => [newRound, ...prev]);
 
-      // Перенаправляем на страницу нового раунда
       window.location.href = `/round/${newRound.id}`;
     } catch (error) {
       console.error('Ошибка создания раунда:', error);
@@ -260,7 +253,6 @@ export const RoundsList: React.FC = () => {
         </>
       )}
 
-      {/* Пагинация */}
       {(pagination.hasMore || currentPage > 0) && rounds.length > 0 && (
         <div
           style={{
@@ -293,7 +285,6 @@ export const RoundsList: React.FC = () => {
         </div>
       )}
 
-      {/* Стили для пагинации */}
       <style>
         {`
           .pagination {
@@ -354,7 +345,6 @@ export const RoundsList: React.FC = () => {
         `}
       </style>
 
-      {/* Информация о пагинации */}
       <div
         style={{
           marginTop: '16px',

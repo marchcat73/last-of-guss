@@ -26,14 +26,12 @@ export const RoundPage: React.FC = () => {
     roundsAPI.getById(id!),
   );
 
-  // Инициализация локальных статистик при загрузке данных
   useEffect(() => {
     if (roundData?.myStats) {
       setLocalStats(roundData.myStats);
     }
   }, [roundData]);
 
-  // Определение статуса раунда на основе времени
   const getRoundState = () => {
     if (!roundData) return 'loading';
 
@@ -48,7 +46,6 @@ export const RoundPage: React.FC = () => {
 
   const roundState = getRoundState();
 
-  // Обновляем данные раунда каждые 5 секунд для активных раундов
   useEffect(() => {
     if (!id || roundState === 'completed') return;
 
@@ -66,16 +63,13 @@ export const RoundPage: React.FC = () => {
     try {
       const result: TapResponse = await roundsAPI.tap(id);
 
-      // Сохраняем результат последнего тапа для анимации
       setLastTapResult(result);
 
-      // Обновляем локальные статистики
       setLocalStats({
         taps: result.taps,
         score: result.score,
       });
 
-      // Обновляем данные раунда с новыми статистиками
       mutate({
         ...roundData!,
         myStats: {
@@ -89,7 +83,6 @@ export const RoundPage: React.FC = () => {
         },
       });
 
-      // Сбрасываем анимацию через 300мс
       setTimeout(() => {
         setLastTapResult(null);
       }, 300);
@@ -142,7 +135,6 @@ export const RoundPage: React.FC = () => {
   const getWinner = () => {
     if (!roundData.topStats.length) return null;
 
-    // Сортируем по score в порядке убывания и берем первого
     const sortedStats = [...roundData.topStats].sort(
       (a, b) => b.score - a.score,
     );
@@ -207,7 +199,6 @@ export const RoundPage: React.FC = () => {
       >
         <Goose onClick={handleGooseClick} disabled={roundState !== 'active'} />
 
-        {/* Анимация при клике */}
         {lastTapResult && (
           <div
             style={{
@@ -228,7 +219,6 @@ export const RoundPage: React.FC = () => {
         )}
       </div>
 
-      {/* Анимация для индикатора клика */}
       <style>
         {`
           @keyframes pulse {
@@ -322,7 +312,6 @@ export const RoundPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Таблица лидеров */}
             {roundData.topStats.length > 0 && (
               <div style={{ marginTop: '24px' }}>
                 <h3>Топ игроков:</h3>
@@ -405,7 +394,6 @@ export const RoundPage: React.FC = () => {
         )}
       </div>
 
-      {/* Статистика в реальном времени для активного раунда */}
       {roundState === 'active' && (
         <div
           style={{
@@ -452,7 +440,6 @@ export const RoundPage: React.FC = () => {
             </div>
           )}
 
-          {/* Прогресс бара для раунда */}
           <div style={{ marginTop: '16px' }}>
             <div
               style={{
